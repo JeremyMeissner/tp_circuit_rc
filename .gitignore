@@ -4,6 +4,8 @@
 *.so
 *.out
 *.exe
+*.txt
+circuits
 
 # Ignore precompiled headers
 *.gch
