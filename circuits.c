@@ -11,7 +11,6 @@ double compute_capacitor_value(double cutoff_fre) {
 
 int main()
 {
-
     double delta_t = 0.001; // Intervalle de temps pour les calculs (pas de temps)
     double signal_duration = 1;
 
@@ -20,7 +19,6 @@ int main()
 
     double low_cutoff_frequency = 5; // hz
     double high_cutoff_frequency = 55; // hz
-
 
     double high_pass_capacity = compute_capacitor_value(high_cutoff_frequency);
     double low_pass_capacity = compute_capacitor_value(low_cutoff_frequency);
@@ -39,7 +37,7 @@ int main()
     FILE *fp = fopen("data.csv", "w");
 
     // Écriture des en-têtes de colonnes dans le fichier CSV
-    fprintf(fp, "time,v_alt_pb,Vc_dt_pb,v_alt_ph,Vr_dt\n");
+    fprintf(fp, "time,v_alt_pb,Vc_dt_pb,v_alt_ph,Vr_dt,current_low_pass_capacitor_voltage, current_high_pass_capacitor_voltage, discharge_low_pass, discharge_high_pass\n");
 
     int counter = 0; // Compteur pour le nombre d'itérations
     double time = 0; // Variable de temps
@@ -47,6 +45,12 @@ int main()
 
     double low_frequency_signal;
     double high_frequency_signal;
+    double current_low_pass_capacitor_voltage = 0;
+    double current_high_pass_capacitor_voltage = 0;
+
+    double discharge_low_pass = 2.0;
+    double discharge_high_pass = 2.0;
+    double V_inital_discharge = 0.0;
     // Boucle pour le filtre passe-bas
     while (time < signal_duration)
     {
@@ -65,8 +69,20 @@ int main()
         Vc_dt_ph = Vc_dt_ph + (((signal - Vc_dt_ph) * delta_t) / (RESISTANCE_VALUE * high_pass_capacity)); // Mise à jour de la tension pour le filtre passe-haut
         Vr_dt = signal - Vc_dt_ph;                                          // Calcul de la tension sur la résistance pour le filtre passe-haut
 
+        // Valeur de la charge du condensateur
+        current_low_pass_capacitor_voltage = current_low_pass_capacitor_voltage + (((V_initial_c - current_low_pass_capacitor_voltage) * delta_t) / (RESISTANCE_VALUE * low_pass_capacity));
+        current_high_pass_capacitor_voltage = current_high_pass_capacitor_voltage + (((V_initial_c - current_high_pass_capacitor_voltage) * delta_t) / (RESISTANCE_VALUE * high_pass_capacity));
+
+        // Discharge
+        discharge_low_pass = discharge_low_pass + (((V_inital_discharge - discharge_low_pass) * delta_t) / (RESISTANCE_VALUE * low_pass_capacity));
+        discharge_high_pass = discharge_high_pass + (((V_inital_discharge - discharge_high_pass) * delta_t) / (RESISTANCE_VALUE * high_pass_capacity));
+
+
+
+
+
         // Écriture des données dans le fichier CSV
-        fprintf(fp, "%lf;%f;%f;%f;%f\n", time, signal, Vc_dt_pb, signal, Vr_dt);
+        fprintf(fp, "%lf;%f;%f;%f;%f;%lf;%lf;%lf;%lf\n", time, signal, Vc_dt_pb, signal, Vr_dt, current_low_pass_capacitor_voltage, current_high_pass_capacitor_voltage, discharge_low_pass, discharge_high_pass);
 
         counter++;  // Incrémentation du compteur
         time += delta_t; // Incrémentation du temps

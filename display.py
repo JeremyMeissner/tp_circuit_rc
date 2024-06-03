@@ -15,6 +15,10 @@ with open('data.csv', 'r') as csvfile:
     Vc_dt_pb = []
     v_alt_ph = []
     Vr_dt = []
+    current_low_pass_capacitor_voltage = []
+    current_high_pass_capacitor_voltage = []
+    discharge_low_pass = []
+    discharge_high_pass = []
 
     # Lire les données ligne par ligne
     for row in csvreader:
@@ -23,6 +27,10 @@ with open('data.csv', 'r') as csvfile:
         Vc_dt_pb.append(float(row[2]))
         v_alt_ph.append(float(row[3]))
         Vr_dt.append(float(row[4]))
+        current_low_pass_capacitor_voltage.append(float(row[5]))
+        current_high_pass_capacitor_voltage.append(float(row[6]))
+        discharge_low_pass.append(float(row[7]))
+        discharge_high_pass.append(float(row[8]))
 
 # Convertir les listes en arrays numpy pour la manipulation et le traçage
 time = np.array(time)
@@ -30,6 +38,10 @@ v_alt_pb = np.array(v_alt_pb)
 Vc_dt_pb = np.array(Vc_dt_pb)
 v_alt_ph = np.array(v_alt_ph)
 Vr_dt = np.array(Vr_dt)
+current_low_pass_capacitor_voltage = np.array(current_low_pass_capacitor_voltage)
+current_high_pass_capacitor_voltage = np.array(current_high_pass_capacitor_voltage)
+discharge_low_pass = np.array(discharge_low_pass)
+discharge_high_pass = np.array(discharge_high_pass)
 
 # Tracer les graphiques
 plt.figure(figsize=(10, 8))
@@ -52,7 +64,7 @@ plt.figure(figsize=(10, 8))
 # plt.legend()
 # plt.grid(True)
 
-plt.subplot(3, 2, 1)
+plt.subplot(3, 3, 1)
 plt.plot(time, v_alt_pb, label='signal')
 plt.title('Signal original')
 plt.xlabel('Temps [s]')
@@ -60,7 +72,7 @@ plt.ylabel('Tension [V]')
 plt.legend()
 plt.grid(True)
 
-plt.subplot(3, 2, 2)
+plt.subplot(3, 3, 2)
 plt.plot(time, Vc_dt_pb, label='signal')
 plt.title('Filtre passe-bas')
 plt.xlabel('Temps [s]')
@@ -70,7 +82,7 @@ plt.grid(True)
 
 
 # Filtre passe-bas (signal d'entrée et filtré)
-plt.subplot(3, 2, 3)
+plt.subplot(3, 3, 4)
 plt.plot(time, v_alt_pb, label='signal')
 plt.title('Signal original')
 plt.xlabel('Temps [s]')
@@ -79,13 +91,55 @@ plt.legend()
 plt.grid(True)
 
 # Filtre passe-haut (signal d'entrée et filtré)
-plt.subplot(3, 2, 4)
+plt.subplot(3, 3, 5)
 plt.plot(time, Vr_dt, label='signal')
 plt.title('Filtre passe-Haut')
 plt.xlabel('Temps [s]')
 plt.ylabel('Tension [V]')
 plt.legend()
 plt.grid(True)
+
+
+
+# Charge capacitor fitre passe-bas
+plt.subplot(3, 3, 3)
+plt.plot(time, current_low_pass_capacitor_voltage, label='signal')
+plt.title('Charge/décharge')
+plt.xlabel('Temps [s]')
+plt.ylabel('Tension [V]')
+plt.legend()
+plt.grid(True)
+
+# Charge capacitor fitre passe-haut
+plt.subplot(3, 3, 6)
+plt.plot(time, current_high_pass_capacitor_voltage, label='signal')
+plt.title('Charge/décharge')
+plt.xlabel('Temps [s]')
+plt.ylabel('Tension [V]')
+plt.legend()
+plt.grid(True)
+
+
+# Charge capacitor fitre passe-bas
+plt.subplot(3, 3, 3)
+plt.plot(time, discharge_low_pass, label='signal')
+plt.title('Charge/décharge')
+plt.xlabel('Temps [s]')
+plt.ylabel('Tension [V]')
+plt.legend()
+plt.grid(True)
+
+# Charge capacitor fitre passe-haut
+plt.subplot(3, 3, 6)
+plt.plot(time, discharge_high_pass, label='signal')
+plt.title('Charge/décharge')
+plt.xlabel('Temps [s]')
+plt.ylabel('Tension [V]')
+plt.legend()
+plt.grid(True)
+
+
+
 
 plt.tight_layout()
 plt.show()
