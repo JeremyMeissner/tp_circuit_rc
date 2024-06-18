@@ -107,7 +107,7 @@ limit = 2000
 # Charge capacitor fitre passe-bas
 plt.subplot(3, 3, 3)
 plt.plot(time[:limit],
-         current_low_pass_capacitor_voltage[:limit], label='signal')
+         current_low_pass_capacitor_voltage[:limit], label='charge')
 plt.title('Charge/décharge')
 plt.xlabel('Temps [s]')
 plt.ylabel('Tension [V]')
@@ -116,7 +116,7 @@ plt.grid(True)
 
 # Charge capacitor fitre passe-bas
 plt.subplot(3, 3, 3)
-plt.plot(time[:limit], discharge_low_pass[:limit], label='signal')
+plt.plot(time[:limit], discharge_low_pass[:limit], label='décharge')
 plt.title('Charge/décharge')
 plt.xlabel('Temps [s]')
 plt.ylabel('Tension [V]')
@@ -124,13 +124,13 @@ plt.legend()
 plt.grid(True)
 
 
-limit = 200
+limit = 2000
 
 
 # Charge capacitor fitre passe-haut
 plt.subplot(3, 3, 6)
 plt.plot(time[:limit],
-         current_high_pass_capacitor_voltage[:limit], label='signal')
+         current_high_pass_capacitor_voltage[:limit], label='charge')
 plt.title('Charge/décharge')
 plt.xlabel('Temps [s]')
 plt.ylabel('Tension [V]')
@@ -140,7 +140,7 @@ plt.grid(True)
 
 # Charge capacitor fitre passe-haut
 plt.subplot(3, 3, 6)
-plt.plot(time[:limit], discharge_high_pass[:limit], label='signal')
+plt.plot(time[:limit], discharge_high_pass[:limit], label='décharge')
 plt.title('Charge/décharge')
 plt.xlabel('Temps [s]')
 plt.ylabel('Tension [V]')
